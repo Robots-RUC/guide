@@ -54,9 +54,10 @@ The Grasshopper library PRC by [Robots in Architecture](https://robotsinarchitec
 2. Save the file with a new name. Do not make changes to the example file. 
 3. The PRC software should launch automatically. Make sure the robot IP is set to the correct one, double check the robots IP through the smartPAD.
 4. The Grasshopper PRC component should say that it established a connection. 
-5. **THE NEXT STEPS WILL MAKE THE ROBOT MOVE, BE CAREFUL**
-6. Toggle ```Move enable``` to ```true```, if it was ```true``` before, toggle to ```false``` and then ```true```
-7. Everytime the command input of the component changes the robot will execute the moves. 
+> [!CAUTION]
+> The next steps will make the robot move. Stand clear of it and have the emergency stop button ready.
+5. Toggle ```Move enable``` to ```true```, if it was ```true``` before, toggle to ```false``` and then ```true```
+2. Everytime the command input of the component changes the robot will execute the moves. 
 
 ### Robot Sensor Interface
 Currently not implemented or explored. Could be a nice semester project!
