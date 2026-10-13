@@ -1,6 +1,6 @@
 # KUKA KR10-1100-2 - Documentation & Code
 
-This repository contains documentation and code to work with the Kuka KR10-1100-2 at the Roskilde University.
+This repository contains documentation and code to work with the KUKA KR10-1100-2 at Roskilde University.
 The repository is still being developed, please submit pull-requests or reach out by mail.
 
 # Safety
@@ -22,42 +22,88 @@ The KUKA KR10-1100-2 is an industrial robot, it is made for high payloads and sp
 
 # Usage
 There are three ways to control the robot: 
-1. Creating a program as a file, uploading it on the robot controller and running it. Best for long running, static programs.
-2. Using mxAutomation for soft real time control through a connected computer or PLC. This can be used to run programs directly from Grasshopper, p5js, etc.
-3. Robot Sensor Interface, hard real time control and external motion planning. Currently not implemented.
+1. Creating a program as a file, uploading it on the robot controller and running it. Best for long-running, static programs.
+2. Using mxAutomation for soft real-time control through a connected computer or PLC. This can be used to run programs directly from Grasshopper, p5js, etc.
+3. Robot Sensor Interface, hard real-time control and external motion planning. Currently not implemented.
 
 ## Static Program Files
-Static programs can either be created on the robot or generated through programs on another computer and then uploaded to the robot with a USB-stick. 
+Static programs can either be created on the robot or generated through programs on another computer and then uploaded to the robot. 
 
-### Grasshopper 
+### Program Generation
+#### Grasshopper 
 In Grasshopper the [PRC](https://robotsinarchitecture.com/kuka-prc/) and the [Robots](https://www.food4rhino.com/en/app/robots) plugin can be used to generate KRL code. 
 
+1. Open the static_program.gh file
+2. Save as a new file
+3. Click on ```Settings``` of the ```Core KUKA KSS``` component
+4. Choose a different (sub)directory for your project and a new name. Enable ```Save File```
+5. Apply settings
+6. Now everytime the plugin detects changes in the program input the file will be written. 
+
+### Program Upload
+1. Plug in the XF1 Ethernet cable.
+2. Set IP to automatic ip assignment by running the ```XF1_set_dhcp``` script
+3. Start the ```firmware_9.3.3_no_mx``` instance on the controller via the SmartPAD
+4. Start iiqWorks.Sim
+5. Click ```Open -> Online -> firmware_9.3.3_no_mx```
+6. Select robot in viewport
+7. Click on ```Program``` tab
+8. In the explorer pane on the left: Right click ```Student_Programs -> Import -> Import KRL file```
+9. Select your generated program
+10. Click on ```Connection``` tab
+11. Click on ```Upload Programs -> Merge Selection```
+12. If SPOC is being requested, accept on the SmartPAD
+13. The program is now uploaded
+
+### Test Run (T1/T2)
+There are two modes on the robot to test run a program. In both modes the operator switch on the back of the SmartPAD and the play button have to be pressed for the program to run. In T1 the speed is automatically reduced for testing, in T2 the speed can be manually reduced but it can run in full speed. Start with T1 and then switch to T2 if you are sure your program is correct and you get the OK from a teacher. 
+
+1. Navigate in the file explorer on the SmartPAD to ```Program -> Student_Programs```
+2. Tap on your file and click ```Select``` in the right pane (switch to Expert account if grayed out)
+3. Make sure you are in T1 or T2 mode
+4. Click on the O -> Enable "Drives Switch"
+5. Select a speed override with the button on the bottom right. Start with 10% and increase if it is too slow.
 > [!CAUTION]
-> Always run the programs in T1 mode before running int Automatic mode.
+> The next steps will make the robot move. Stand clear of it and have the emergency stop button ready.
+6. Press the operator switch on the back of the SmartPAD and hold the play button to run your program
+
+### Automatic
+In automatic mode the program runs without continuously pressing a button. Only run in automatic mode after validating your program in T1/T2 mode. 
+
+1. Switch to Automatic mode
+2. Click on the O -> Enable "Drives Switch"
+> [!CAUTION]
+> The next steps will make the robot move. Stand clear of it and have the emergency stop button ready.
+3. Hold the play button until the robot is in home position
+4. Press play again and the program starts.
+
+
+
 
 ## mxAutomation
 
-mxAutomation allows controlling the Robot in soft real-time through a connected computer or PLC.
+mxAutomation allows controlling the robot in soft real-time through a connected computer or PLC.
 
 ### Parametric Robot Control Server
 
-The Grasshopper library PRC by [Robots in Architecture](https://robotsinarchitecture.com/) implements the communication over the mxAutomation protocol with the robot. This allows us to write simpler code in for example Javascript or even to use plugins in programs such as Grasshoppe and Blender. More information and downloads can be found [here](https://robotsinarchitecture.com/kuka-prc/).
+The Grasshopper library PRC by [Robots in Architecture](https://robotsinarchitecture.com/) implements the communication over the mxAutomation protocol with the robot. This allows us to write simpler code in for example Javascript or even to use plugins in programs such as Grasshopper and Blender. More information and downloads can be found [here](https://robotsinarchitecture.com/kuka-prc/).
 
 #### Setup
 1. Connect the ```XF4``` ethernet cable to the computer.
-3. Run the ```XF4_ethernet.bat``` file. (xxx-todo)
-4. Run the ```Launch PRC``` prgram. 
+2. Run the ```XF4_set_static_ip``` script. 
+3. Run the ```Launch PRC``` program. 
 
 #### Grasshopper
 
 1. Open the example Grasshopper file (xxx-todo)
 2. Save the file with a new name. Do not make changes to the example file. 
-3. The PRC software should launch automatically. Make sure the robot IP is set to the correct one, double check the robots IP through the smartPAD.
+3. The PRC software should launch automatically. Make sure the robot IP is set to the correct one, double check the robot's IP through the SmartPAD.
 4. The Grasshopper PRC component should say that it established a connection. 
+5. Set robot to ```Ext``` mode
 > [!CAUTION]
 > The next steps will make the robot move. Stand clear of it and have the emergency stop button ready.
-5. Toggle ```Move enable``` to ```true```, if it was ```true``` before, toggle to ```false``` and then ```true```
-2. Everytime the command input of the component changes the robot will execute the moves. 
+6. Toggle ```Move enable``` to ```true```. If it was ```true``` before, toggle to ```false``` and then ```true```
+7. Every time the command input of the component changes the robot will execute the moves. 
 
 ### Robot Sensor Interface
 Currently not implemented or explored. Could be a nice semester project!
@@ -65,27 +111,27 @@ Currently not implemented or explored. Could be a nice semester project!
 ---
 
 > [!CAUTION]
-> The following is only to change the robots settings. For normal usage this should not be necessary.
+> The following is only to change the robot's settings. For normal usage this should not be necessary.
 
+# Setting Up the Work Environment
 
-
-### Requirements
+## Requirements
 - [iiqWorks.Cockpit](https://my.kuka.com/s/category/robotics-software/engineering-for-robot-systems/kuka-iiqworks/kuka-iiqworkscockpit/0ZG1i000000XacAGAS?language=en_US&tab=Products) 
 
 - [iiqWorks.Sim](https://my.kuka.com/s/category/robotics-software/engineering-for-robot-systems/kuka-iiqworks/kuka-iiqworkssim/0ZG1i000000XaTjGAK?language=en_US)
 
-The Kuka software is Windows only but it works with some tweaks on macOS via Parallels.
+The KUKA software is Windows only but it works with some tweaks on macOS via Parallels.
 
 Ethernet connection to ```XF1``` port on the robot control box.
-On the computer the ethernet connection must be set to ```Automatic IP assignment```. The robot acts as a DHCP server. 
+On the computer the ethernet connection must be set to ```Automatic IP assignment```. The robot acts as a DHCP server. Run the ```XF1_set_dhcp``` to configure this.
 
-### Adding the Robot
+## Adding the Robot
 
 1. Start Cockpit
-2. Click add controller -> enter IP of robot (On the tech pedant go to system settings, it shows the robot IP) 
+2. Click add controller -> enter IP of robot (On the SmartPAD go to system settings, it shows the robot IP) 
 3. Authenticate with login ```expert``` and password.
 
-### Changing an Instance
+## Changing an Instance
 
 > [!CAUTION]
 > Do not change the existing instances. Always duplicate an existing one and change the new one. 
@@ -93,17 +139,18 @@ On the computer the ethernet connection must be set to ```Automatic IP assignmen
 1. Stop all instances
 2. Click on one of the instances
 3. Duplicate instance
-4. Open instance in ```Sim``` or start ```Sim``` -> ```Open``` -> ```Online```->```Download the new instance```
+4. Open instance in ```iiqWorks.Sim```
+5. Alternatively: Start ```iiqWorks.Sim```, then click: ```Open -> Online``` and download the new instance
 
 ### Notes on creating a new instance
 If you get errors with a new instance, double check the Fieldbus entries in Sim. 
 There should be: 
 
-KUKA System Bus(Sys-x48)->Kuka Digital IO Board (DIOB)->KUKA Extended IO Board (EIOB)
+```KUKA System Bus(Sys-x48)->KUKA Digital IO Board (DIOB)->KUKA Extended IO Board (EIOB)```
 
 and
 
-KUKA Controller Bus (KCB)->KUKA Servo Pack (KSP-320-8)->Resolver Digital Converter (RDC) -> EM8905-1001 I/O-Module + Electronic Mastering Device
+```KUKA Controller Bus (KCB)->KUKA Servo Pack (KSP-320-8)->Resolver Digital Converter (RDC) -> EM8905-1001 I/O-Module + Electronic Mastering Device```
 
 Also double check the EtherCAT addresses with an old version.
 
@@ -115,17 +162,17 @@ Device ```UDP```
 Click ```Use default I/O mapping```
 
 
-Remote IP: the IP of the computer (172.16.0.5)
+Remote IP: the IP of the computer (```172.16.0.5```)
 
-Port: leave as is (1336)
+Port: leave as is (```1336```)
 
-Timeout: 1000
+Timeout: ```1000```
 
-Enable KRMsgNet: False
+Enable KRMsgNet: ```False```
 
 
 
 ### PRC
 1. Download the installation file from the [website](https://portal.robotsinarchitecture.org/download) and follow the installation instructions. 
 2. Connect the computer via ethernet to the ```XF4``` port of the robot.
-3. Set the computers IP to static IP with ```172.16.0.5``` and Subnet mask of ```255.255.255.0```
+3. Set the computer's IP to static IP with ```172.16.0.5``` and Subnet mask of ```255.255.255.0``` or run ```XF4_set_static_ip script```
